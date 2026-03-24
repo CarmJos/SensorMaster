@@ -58,7 +58,6 @@ public class Main {
             bottomPanel.add(new FooterPanel(), BorderLayout.SOUTH);
             contentPane.add(bottomPanel, BorderLayout.SOUTH);
 
-
             Image icon = readIcon();
             if (icon != null) {
                 dashboard.setIconImage(icon);

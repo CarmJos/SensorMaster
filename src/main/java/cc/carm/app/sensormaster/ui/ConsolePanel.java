@@ -9,6 +9,7 @@ import java.awt.*;
 public class ConsolePanel extends JPanel {
 
     protected final JTextArea consoleArea; // 串口输出
+    protected final JScrollPane scrollPane;
 
     public ConsolePanel() {
         super(new BorderLayout());
@@ -34,7 +35,8 @@ public class ConsolePanel extends JPanel {
         consoleArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
         consoleArea.append("> 系统就绪，等待串口连接...\n");
 
-        add(new JScrollPane(consoleArea), BorderLayout.CENTER);
+        scrollPane = new JScrollPane(consoleArea);
+        add(scrollPane, BorderLayout.CENTER);
     }
 
     public JTextArea getConsoleArea() {
@@ -50,12 +52,21 @@ public class ConsolePanel extends JPanel {
     }
 
     public void appendLine(@Nullable String text) {
+        // 检查是否在底部
+        JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
+        boolean isAtBottom = verticalBar.getValue() + verticalBar.getVisibleAmount() >= verticalBar.getMaximum();
+
         if (text != null) {
             consoleArea.append(text);
         }
         consoleArea.append("\n");
-        // 可选：自动滚动到底部
-        consoleArea.setCaretPosition(consoleArea.getDocument().getLength());
+
+        if (isAtBottom) {
+            SwingUtilities.invokeLater(() -> {
+                Rectangle rect = new Rectangle(0, consoleArea.getHeight() - 1, 1, 1);
+                consoleArea.scrollRectToVisible(rect);
+            });
+        }
     }
 
 }
