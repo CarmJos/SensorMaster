@@ -71,7 +71,10 @@ public abstract class SerialController<DATA> {
                 try {
                     DATA parsed = sensorType.handleResponse(response);
                     if (parsed != null) {
-                        address = response.unsignedAddress();
+                        if (address == null || address != response.unsignedAddress()) {
+                            address = response.unsignedAddress();
+                            LOGGER.info("Detected address [{}] for sensor type [{}]", address, sensorType.name());
+                        }
                         handleData(parsed, sensorType.formatData(parsed));
                     }
                 } catch (Exception ex) {
