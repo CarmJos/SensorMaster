@@ -22,6 +22,7 @@
 - **DeepSeek**: 用于处理源数据表格，使其生成了更易于读取的 [SENSOR_MAP](.doc/SENSORS_MAP.md)。
 - **Google Stitch**: 用于设计初始软件前端样式（实际并没有直接使用）。
 - **Claude Code**: 协助我完成了大量重复的代码工作（如将SENSOR_MAP转换为Java代码），并实现了部分前端内容。
+- **Google Gemini**: 实现了基本的前端框架内容。
 
 
 ## 支持
