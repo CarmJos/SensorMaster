@@ -17,7 +17,9 @@
 
 您可以在 [Releases](https://github.com/CarmJos/SensorMaster/releases) 页面下载最新版本的可执行文件。
 
-1. 必须使用 Java 8 及以上版本运行本项目，请确保您的系统已安装 Java 运行环境。
+1. 必须使用 Java 8 及以上版本运行本项目。
+    - 请确保您的系统已安装 Java 8 及以上版本运行环境。
+    - 或[下载 JRE8](https://download.bell-sw.com/java/8u482+10/bellsoft-jre8u482+10-windows-amd64.zip) 解压与文件同目录下，并将JRE文件夹命名为 `runtime`。
 2. 双击`可执行文件(SensorMaster-x.x.x.exe)`或在命令行中运行 `java -jar SensorMaster-x.x.x.jar` 启动软件。
 3. 显示页面后，请选择串口与想要调节的传感器类型，并点击“开始连接”按钮。
 4. 等待软件自动识别传感器地址并显示其数据。

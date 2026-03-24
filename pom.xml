@@ -306,11 +306,13 @@
                             <outfile>.asset/${project.name}-${project.version}.exe</outfile>
                             <jar>.asset/${project.name}-${project.version}.jar</jar>
                             <errTitle>SensorMaster Runtime ERROR</errTitle>
+                            <downloadUrl>${distributionManagement.downloadUrl}</downloadUrl>
                             <classPath>
                                 <mainClass>cc.carm.app.sensormaster.Main</mainClass>
                             </classPath>
                             <icon>.doc/icon/icon.ico</icon>
                             <jre>
+                                <path>runtime</path>
                                 <minVersion>${project.jdk.version}</minVersion>
                                 <initialHeapSize>128</initialHeapSize>
                                 <maxHeapSize>1024</maxHeapSize>
