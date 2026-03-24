@@ -4,7 +4,6 @@ import cc.carm.app.sensormaster.data.SerialPortInfo;
 import cc.carm.app.sensormaster.type.SensorRegistry;
 import cc.carm.app.sensormaster.type.SensorType;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,6 +25,7 @@ public abstract class ControlPanel extends JPanel {
 
         left.add(new JLabel("使用串口"));
         comSelector = new JComboBox<>(refreshComPorts().toArray(new SerialPortInfo[0]));
+        comSelector.addActionListener(e -> updateConnectButton());
         left.add(comSelector);
 
         refreshButton = new JButton("刷新串口信息");
@@ -33,25 +33,39 @@ public abstract class ControlPanel extends JPanel {
             List<SerialPortInfo> ports = refreshComPorts();
             comSelector.removeAllItems();
             ports.forEach(port -> comSelector.addItem(port));
+            updateConnectButton();
         });
         left.add(refreshButton);
         left.add(Box.createHorizontalStrut(10));
 
         left.add(new JLabel("传感器"));
         sensorSelector = new JComboBox<>(SensorRegistry.values());
+        sensorSelector.addActionListener(e -> updateConnectButton());
+
         left.add(sensorSelector);
 
         connectButton = new JButton();
         connectButton.setPreferredSize(new Dimension(120, 30));
         connectButton.addActionListener(e -> setStarted(!this.started(), true));
+        updateConnectButton();
 
         add(left, BorderLayout.WEST);
         add(connectButton, BorderLayout.EAST);
         setStarted(false, false);
+        sensorSelector.setSelectedItem(null);
+        comSelector.setSelectedItem(null);
     }
 
     public boolean started() {
         return this.connected;
+    }
+
+    public void updateConnectButton() {
+        if (started()) {
+            connectButton.setEnabled(true);
+            return;
+        }
+        connectButton.setEnabled(comSelector.getSelectedItem() != null && sensorSelector.getSelectedItem() != null);
     }
 
     public void setStarted(boolean status, boolean triggerEvent) {

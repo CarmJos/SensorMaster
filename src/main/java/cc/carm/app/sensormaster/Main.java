@@ -113,8 +113,13 @@ public class Main {
         public List<SerialPortInfo> refreshComPorts() {
             LOGGER.info("Refreshing COM ports...");
             return Arrays.stream(SerialPort.getCommPorts())
-                    .peek(port -> LOGGER.info("Found serial port {} - {}", port.getSystemPortName(), port.getPortDescription()))
-                    .map(SerialPortInfo::of).collect(Collectors.toList());
+                    .peek(port -> LOGGER.info(
+                            "Found serial port ({}) {} @[{}] - {}",
+                            port.getPortLocation(),
+                            port.getSystemPortName(),
+                            port.getSystemPortPath(),
+                            port.getPortDescription()
+                    )).map(SerialPortInfo::of).collect(Collectors.toList());
         }
     };
 
