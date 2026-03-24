@@ -8,7 +8,7 @@
 > 如您需要使用或修改代码，请务必仔细阅读并理解代码逻辑，确保其符合您的需求和安全要求。
 
 如有任何问题或建议，欢迎通过邮箱 [**carm@carm.cc**](mailto:carm@carm.cc)
-或 [issues](https://github.com/CarmJos/mcu-courseworks/issues/new) 联系我。
+或 [issues](https://github.com/CarmJos/SensorMaster/issues/new) 联系我。
 
 
 ## 开源许可证
@@ -27,5 +27,5 @@
 ## 支持
 
 感谢 JetBrains 为我们提供免费的开发工具许可证，以便我致力于此项目及其他开源项目的开发工作。  
-[![](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)](https://www.jetbrains.com/?from=https://github.com/CarmJos/java-courseworks)
+[![](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)](https://www.jetbrains.com/?from=https://github.com/CarmJos/SensorMaster)
 
