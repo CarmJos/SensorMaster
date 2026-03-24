@@ -1,8 +1,7 @@
 # SensorMaster
+<img src=".doc/logo.png" width="150px" alt="logo" align="right" style="float: right"/>
 
 适用于“物联网工程”实训实验的传感器快速调试工具。
-
-<img src=".doc/dashboard.png" width="600px" alt="DASHBOARD">
 
 > [!IMPORTANT]
 > 本项目的部分代码利用AI实现，个人只重点关注了项目结构与逻辑设计。
@@ -19,6 +18,8 @@
 3. 等待软件自动识别传感器地址并显示其数据。
 4. 识别成功后，您可以在软件界面上调节传感器的地址，并查看数据变化。
 5. 点击“停止连接”按钮结束调试。
+<img src=".doc/dashboard.png" width="600px" alt="DASHBOARD">
+
 
 ## 开源许可证
 
