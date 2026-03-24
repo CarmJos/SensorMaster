@@ -305,11 +305,11 @@
                             <headerType>gui</headerType>
                             <outfile>.asset/${project.name}-${project.version}.exe</outfile>
                             <jar>.asset/${project.name}-${project.version}.jar</jar>
-                            <errTitle>App Err</errTitle>
+                            <errTitle>SensorMaster Runtime ERROR</errTitle>
                             <classPath>
                                 <mainClass>cc.carm.app.sensormaster.Main</mainClass>
                             </classPath>
-                            <icon>src/main/resources/icon.ico</icon>
+                            <icon>.doc/icon/icon.ico</icon>
                             <jre>
                                 <minVersion>${project.jdk.version}</minVersion>
                                 <initialHeapSize>128</initialHeapSize>

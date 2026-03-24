@@ -1,5 +1,5 @@
 # SensorMaster
-<img src=".doc/logo.png" width="150px" alt="logo" align="right" style="float: right"/>
+<img src=".doc/icon/logo.png" width="150px" alt="logo" align="right" style="float: right"/>
 
 适用于“物联网工程”实训实验的传感器快速调试工具。
 
@@ -13,7 +13,7 @@
 
 ## 使用方法
 
-<img src=".doc/dashboard.png" width="600px" alt="DASHBOARD">
+<img src=".doc/img/dashboard.png" width="600px" alt="DASHBOARD">
 
 您可以在 [Releases](https://github.com/CarmJos/SensorMaster/releases) 页面下载最新版本的可执行文件。
 
