@@ -2,7 +2,7 @@
 
 适用于“物联网工程”实训实验的传感器快速调试工具。
 
-![DASHBOARD](.doc/dashboard.png){width=50%}
+<img src=".doc/dashboard.png" width="600px" alt="DASHBOARD">
 
 > [!IMPORTANT]
 > 本项目的部分代码利用AI实现，个人只重点关注了项目结构与逻辑设计。
