@@ -13,7 +13,7 @@ on:
 jobs:
   packages-deploy:
     name: "Publish Project (GitHub Packages)"
-    runs-on: windows-2022
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
       - name: "Set up JDK"
@@ -27,7 +27,7 @@ jobs:
           server-password: MAVEN_TOKEN
 
       - name: "Maven Packaging"
-        run: mvn -B package -DskipTests -Dmaven.javadoc.skip=true
+        run: mvn -B package -DskipTests
         env:
           MAVEN_USERNAME: ${{ github.repository_owner }}
           MAVEN_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -40,4 +40,3 @@ jobs:
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ".asset/*"
-          asset_content_type: application/java-archive
