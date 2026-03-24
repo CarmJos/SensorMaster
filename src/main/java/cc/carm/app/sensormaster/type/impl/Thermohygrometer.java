@@ -6,6 +6,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
+import java.util.Objects;
+
 public class Thermohygrometer implements SensorType<Thermohygrometer.Data> {
 
     public static Thermohygrometer create(@NotNull String name, int... requestCommand) {
@@ -49,7 +51,44 @@ public class Thermohygrometer implements SensorType<Thermohygrometer.Data> {
         return name;
     }
 
-    public record Data(double temperature, double humidity) {
+    public static final class Data {
+        private final double temperature;
+        private final double humidity;
+
+        public Data(double temperature, double humidity) {
+            this.temperature = temperature;
+            this.humidity = humidity;
+        }
+
+        public double temperature() {
+            return temperature;
+        }
+
+        public double humidity() {
+            return humidity;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) return true;
+            if (obj == null || obj.getClass() != this.getClass()) return false;
+            Data that = (Data) obj;
+            return Double.doubleToLongBits(this.temperature) == Double.doubleToLongBits(that.temperature) &&
+                    Double.doubleToLongBits(this.humidity) == Double.doubleToLongBits(that.humidity);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(temperature, humidity);
+        }
+
+        @Override
+        public String toString() {
+            return "Data[" +
+                    "temperature=" + temperature + ", " +
+                    "humidity=" + humidity + ']';
+        }
+
     }
 
 }

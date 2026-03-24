@@ -1,5 +1,6 @@
 package cc.carm.app.sensormaster.ui;
 
+import cc.carm.app.sensormaster.Main;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -13,11 +14,26 @@ public class ConsolePanel extends JPanel {
         super(new BorderLayout());
         setBorder(BorderFactory.createTitledBorder("串口实时日志"));
 
+        // --- 1. 创建顶部工具栏容器 ---
+        JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+        this.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                // 判断点击位置是否在顶部标题栏区域（大约上方 20 像素以内）
+                if (e.getClickCount() == 2 && e.getY() < 25) {
+                    clear();
+                }
+            }
+        });
+        add(headerPanel, BorderLayout.NORTH);
+
+        // --- 2. 配置日志显示区 ---
         consoleArea = new JTextArea(6, 50);
         consoleArea.setBackground(new Color(245, 245, 245));
         consoleArea.setEditable(false);
         consoleArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
         consoleArea.append("> 系统就绪，等待串口连接...\n");
+
         add(new JScrollPane(consoleArea), BorderLayout.CENTER);
     }
 
@@ -25,8 +41,12 @@ public class ConsolePanel extends JPanel {
         return this.consoleArea;
     }
 
+    /**
+     * 清空日志内容
+     */
     public void clear() {
-        consoleArea.removeAll();
+        Main.LOGGER.info("Cleared console lines.");
+        consoleArea.setText("");
     }
 
     public void appendLine(@Nullable String text) {
@@ -34,6 +54,8 @@ public class ConsolePanel extends JPanel {
             consoleArea.append(text);
         }
         consoleArea.append("\n");
+        // 可选：自动滚动到底部
+        consoleArea.setCaretPosition(consoleArea.getDocument().getLength());
     }
 
 }

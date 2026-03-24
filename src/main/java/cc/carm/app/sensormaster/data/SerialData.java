@@ -4,7 +4,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
-public record SerialData(byte address, byte[] data, byte[] check) {
+import java.util.Objects;
+
+public final class SerialData {
+    private final byte address;
+    private final byte[] data;
+    private final byte[] check;
+
+    public SerialData(byte address, byte[] data, byte[] check) {
+        this.address = address;
+        this.data = data;
+        this.check = check;
+    }
 
     public static @NotNull SerialData of(int address, int... data) {
         byte addressByte = (byte) (address & 0xFF);
@@ -122,5 +133,33 @@ public record SerialData(byte address, byte[] data, byte[] check) {
         }
         return result;
     }
+
+    public byte address() {
+        return address;
+    }
+
+    public byte[] data() {
+        return data;
+    }
+
+    public byte[] check() {
+        return check;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        SerialData that = (SerialData) obj;
+        return this.address == that.address &&
+                Objects.equals(this.data, that.data) &&
+                Objects.equals(this.check, that.check);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(address, data, check);
+    }
+
 
 }

@@ -42,7 +42,7 @@ public abstract class ControlPanel extends JPanel {
         left.add(sensorSelector);
 
         connectButton = new JButton();
-        connectButton.setPreferredSize(new Dimension(100, 30));
+        connectButton.setPreferredSize(new Dimension(120, 30));
         connectButton.addActionListener(e -> setStarted(!this.started(), true));
 
         add(left, BorderLayout.WEST);

@@ -18,6 +18,10 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +33,7 @@ public class Main {
         FlatLightLaf.setup();
     }
 
-    private static final Logger LOGGER = LogManager.getLogger(Main.class);
+    public static final Logger LOGGER = LogManager.getLogger(Main.class);
     public static @Nullable SerialController<?> CONTROLLER = null;
 
     public static void main(String[] args) {
@@ -49,7 +53,6 @@ public class Main {
             contentPane.add(controlPanel, BorderLayout.NORTH);
             contentPane.add(displayPanel, BorderLayout.CENTER);
 
-            // 底部面板：包含控制台和信息面板
             JPanel bottomPanel = new JPanel(new BorderLayout(0, 15));
             bottomPanel.add(consolePanel, BorderLayout.CENTER);
             bottomPanel.add(new FooterPanel(), BorderLayout.SOUTH);
@@ -154,9 +157,13 @@ public class Main {
 
     public static String getVersion() {
         // 从 resources/PROJECT_VERSION 文件获取项目版本号
-        try (var inputStream = Main.class.getResourceAsStream("/PROJECT_VERSION")) {
+        try (InputStream inputStream = Main.class.getResourceAsStream("/PROJECT_VERSION")) {
             if (inputStream != null) {
-                return new String(inputStream.readAllBytes()).trim();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                String version = reader.readLine();
+                if (version != null && !version.trim().isEmpty()) {
+                    return version.trim();
+                }
             }
         } catch (Exception e) {
             LOGGER.warn("Failed to read PROJECT_VERSION file", e);

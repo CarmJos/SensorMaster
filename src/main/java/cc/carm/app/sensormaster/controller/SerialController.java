@@ -21,7 +21,7 @@ public abstract class SerialController<DATA> {
 
     public static <DATA> SerialController<DATA> create(@NotNull SerialPort serialPort, @NotNull SensorType<DATA> sensorType,
                                                        @NotNull BiConsumer<DATA, String> dataConsumer) {
-        return new SerialController<>(serialPort, sensorType) {
+        return new SerialController<DATA>(serialPort, sensorType) {
             @Override
             public void handleData(@NotNull DATA data, @NotNull String dataText) {
                 dataConsumer.accept(data, dataText);

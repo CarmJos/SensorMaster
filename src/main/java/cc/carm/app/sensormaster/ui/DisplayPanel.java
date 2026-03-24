@@ -111,8 +111,8 @@ public abstract class DisplayPanel extends JPanel {
 
     public long getUpdateInterval() {
         Object selected = intervalSelector.getSelectedItem();
-        if (selected instanceof TimeInterval interval) {
-            return interval.interval;
+        if (selected instanceof TimeInterval) {
+            return ((TimeInterval) selected).interval;
         }
         return 500;
     }
@@ -142,7 +142,23 @@ public abstract class DisplayPanel extends JPanel {
         }
     }
 
-    public record TimeInterval(String display, long interval) {
+    public static class TimeInterval {
+        private final String display;
+        private final long interval;
+
+        public TimeInterval(String display, long interval) {
+            this.display = display;
+            this.interval = interval;
+        }
+
+        public String display() {
+            return display;
+        }
+
+        public long interval() {
+            return interval;
+        }
+
         @Override
         public @NotNull String toString() {
             return display;
