@@ -13,13 +13,13 @@
 
 ## 使用方法
 
+<img src=".doc/dashboard.png" width="600px" alt="DASHBOARD">
+
 1. 使用 Java 21 及以上版本运行本项目。
 2. 选择串口与想要调节的传感器类型，并点击“开始连接”按钮。
 3. 等待软件自动识别传感器地址并显示其数据。
 4. 识别成功后，您可以在软件界面上调节传感器的地址，并查看数据变化。
 5. 点击“停止连接”按钮结束调试。
-<img src=".doc/dashboard.png" width="600px" alt="DASHBOARD">
-
 
 ## 开源许可证
 
