@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+    <Properties>
+        <Property name="log_level">%highlight{%level}{
+            FATAL=red, ERROR=red, WARN=yellow, INFO=green, DEBUG=cyan, TRACE=blue}
+        </Property>
+        <Property name="log_prefix">[%d{HH:mm:ss} ${log_level}]</Property>
+    </Properties>
+
+    <Appenders>
+        <TerminalConsole name="Console">
+            <PatternLayout>
+                <LoggerNamePatternSelector
+                        defaultPattern="${log_prefix} [%logger] %msg%n%xEx">
+                    <PatternMatch key="cc.carm.app.sensormaster"
+                                  pattern="${log_prefix} %msg%n%xEx"/>
+                </LoggerNamePatternSelector>
+            </PatternLayout>
+        </TerminalConsole>
+    </Appenders>
+
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
+</Configuration>
