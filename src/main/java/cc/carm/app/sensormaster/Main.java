@@ -74,7 +74,7 @@ public class Main {
         @Override
         public void whenStart(@NotNull SerialPortInfo comPort, @NotNull SensorType<?> sensor) {
             consolePanel.appendLine("> 正在连接串口 " + comPort + " ，传感器类型 " + sensor.name());
-            displayPanel.updateContent("尝试连接中", Color.ORANGE);
+            displayPanel.updateContent("尝试连接中", "尝试开启串口 " + comPort.id(), Color.ORANGE);
 
             if (Main.CONTROLLER != null) {
                 Main.CONTROLLER.close();
@@ -91,7 +91,7 @@ public class Main {
 
             if (!Main.CONTROLLER.connect()) {
                 consolePanel.appendLine("> 无法连接至 " + comPort + " ，请检查连接状态和串口权限。");
-                displayPanel.updateContent("连接失败", Color.RED);
+                displayPanel.updateContent("连接失败", "请确认连接状态", Color.RED);
                 displayPanel.updateStatus(false);
             }
 
@@ -100,7 +100,7 @@ public class Main {
         @Override
         public void whenStop(@NotNull SerialPortInfo comPort, @NotNull SensorType<?> type) {
             consolePanel.appendLine("> 终止连接");
-            displayPanel.updateContent("未连接", Color.DARK_GRAY);
+            displayPanel.updateContent("未连接", "等待串口连接", Color.DARK_GRAY);
             displayPanel.updateStatus(false);
 
             if (Main.CONTROLLER != null) {

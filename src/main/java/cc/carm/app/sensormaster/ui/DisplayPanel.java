@@ -10,6 +10,8 @@ import java.awt.*;
 public abstract class DisplayPanel extends JPanel {
 
     protected JLabel dataDisplay; // 数据展示框
+    protected JLabel subtitleDisplay;
+
     protected JSpinner addressDisplay;  // 数据地址框
     protected JButton addressApply; // 地址应用按钮
     protected JButton refreshButton; // 刷新按钮
@@ -24,18 +26,17 @@ public abstract class DisplayPanel extends JPanel {
 
         dataDisplay = new JLabel();
         dataDisplay.setFont(new Font("SimHei", Font.BOLD, 72));
-        updateContent("未连接", Color.DARK_GRAY);
 
-        JLabel unitLabel = new JLabel("最新数据");
-        unitLabel.setFont(new Font("SimHei", Font.PLAIN, 14));
-        unitLabel.setForeground(Color.GRAY);
+        subtitleDisplay = new JLabel("最新数据");
+        subtitleDisplay.setFont(new Font("SimHei", Font.PLAIN, 14));
+        subtitleDisplay.setForeground(Color.GRAY);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         dataCard.add(dataDisplay, gbc);
         gbc.gridy = 1;
-        dataCard.add(unitLabel, gbc);
+        dataCard.add(subtitleDisplay, gbc);
 
         JPanel paramPanel = new JPanel(new GridLayout(1, 2, 20, 0));
 
@@ -87,7 +88,9 @@ public abstract class DisplayPanel extends JPanel {
 
         add(dataCard, BorderLayout.CENTER);
         add(paramPanel, BorderLayout.SOUTH);
+
         updateStatus(false);
+        updateContent("未连接", "等待串口连接", Color.DARK_GRAY);
     }
 
     public void updateAddress(int address) {
@@ -95,12 +98,13 @@ public abstract class DisplayPanel extends JPanel {
     }
 
     public void updateContent(@NotNull String content) {
-        updateContent(content, new Color(0, 102, 204));
+        updateContent(content, "最新数据", new Color(0, 102, 204));
     }
 
-    public void updateContent(@NotNull String content, @Nullable Color color) {
+    public void updateContent(@NotNull String content, @NotNull String subtitle, @Nullable Color color) {
         dataDisplay.setText(content);
         dataDisplay.setForeground(color);
+        subtitleDisplay.setText(subtitle);
     }
 
     public void updateStatus(boolean status) {
