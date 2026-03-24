@@ -63,6 +63,12 @@ public class NumericSensorType implements SensorType<Double> {
         return String.format("%.1f %s", data, unit);
     }
 
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
     public static class Builder {
 
         protected final String name;

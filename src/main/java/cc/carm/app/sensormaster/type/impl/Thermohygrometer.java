@@ -44,6 +44,11 @@ public class Thermohygrometer implements SensorType<Thermohygrometer.Data> {
         return data.temperature + " ℃ / " + data.humidity + " %RH";
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     public record Data(double temperature, double humidity) {
     }
 
