@@ -1,5 +1,7 @@
 package cc.carm.app.sensormaster.ui;
 
+import cc.carm.app.sensormaster.Main;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -18,6 +20,12 @@ public class FooterPanel extends JPanel {
         JLabel title = new JLabel("SensorMaster");
         title.setFont(new Font("Consolas", Font.BOLD, 18));
         leftPanel.add(title);
+
+
+        JLabel version = new JLabel(Main.getVersion());
+        version.setFont(new Font("Consolas", Font.PLAIN, 12));
+        leftPanel.add(version);
+
         leftPanel.add(createDash('|'));
 
         JLabel descriptionLabel = new JLabel("适用于\"物联网工程\"实训实验的传感器快速调试工具。");

@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -33,6 +34,7 @@ public class Main {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
+
             JFrame dashboard = new JFrame();
             dashboard.setTitle("SensorMaster 传感器调试工具");
             dashboard.setSize(900, 700);
@@ -52,6 +54,12 @@ public class Main {
             bottomPanel.add(consolePanel, BorderLayout.CENTER);
             bottomPanel.add(new FooterPanel(), BorderLayout.SOUTH);
             contentPane.add(bottomPanel, BorderLayout.SOUTH);
+
+
+            Image icon = readIcon();
+            if (icon != null) {
+                dashboard.setIconImage(icon);
+            }
 
             dashboard.setVisible(true);
         });
@@ -134,5 +142,26 @@ public class Main {
         }
 
     };
+
+    private static @Nullable Image readIcon() {
+        Image image = null;
+        try {
+            image = ImageIO.read(Main.class.getResourceAsStream("/icon.png"));
+        } catch (Exception e) {
+        }
+        return image;
+    }
+
+    public static String getVersion() {
+        // 从 resources/PROJECT_VERSION 文件获取项目版本号
+        try (var inputStream = Main.class.getResourceAsStream("/PROJECT_VERSION")) {
+            if (inputStream != null) {
+                return new String(inputStream.readAllBytes()).trim();
+            }
+        } catch (Exception e) {
+            LOGGER.warn("Failed to read PROJECT_VERSION file", e);
+        }
+        return "Unknown";
+    }
 
 }
