@@ -309,7 +309,7 @@
                             <classPath>
                                 <mainClass>cc.carm.app.sensormaster.Main</mainClass>
                             </classPath>
-                            <!--                            <icon>src/main/resources/icons/main.ico</icon>-->
+                            <icon>src/main/resources/icon.ico</icon>
                             <jre>
                                 <minVersion>${project.jdk.version}</minVersion>
                                 <initialHeapSize>128</initialHeapSize>
