@@ -7,12 +7,14 @@ public interface SensorRegistry {
 
     NumericSensorType WIND_SPEED = NumericSensorType.create("风速")
             .dataIndices(2, 3)
+            .unit("m/s")
             .requestCommand(0x03, 0x00, 0x09, 0x00, 0x01)
             .handleData(raw -> raw / 10)
             .build();
 
     NumericSensorType WIND_DIRECTION = NumericSensorType.create("风向")
             .dataIndices(3, 4)
+            .unit("°")
             .requestCommand(0x03, 0x00, 0x0A, 0x00, 0x01)
             .handleData(raw -> raw / 10)
             .build();
@@ -29,35 +31,40 @@ public interface SensorRegistry {
 
     NumericSensorType CO2_CONCENTRATION = NumericSensorType.create("二氧化碳浓度")
             .dataIndices(3, 4)
+            .unit("ppm")
             .requestCommand(0x03, 0x00, 0x07, 0x00, 0x01)
             .build();
 
     NumericSensorType ATMOSPHERIC_PRESSURE = NumericSensorType.create("大气压力")
             .dataIndices(3, 4)
+            .unit("hPa")
             .requestCommand(0x03, 0x00, 0x0B, 0x00, 0x01)
             .handleData(raw -> raw / 10)
             .build();
 
     NumericSensorType LIGHT_INTENSITY = NumericSensorType.create("光照度")
             .dataIndices(3, 6)
+            .unit("Lux")
             .requestCommand(0x03, 0x00, 0x02, 0x00, 0x02)
             .build();
 
     NumericSensorType SOIL_PH = NumericSensorType.create("土壤pH值")
             .dataIndices(3, 4)
+            .unit("")
             .requestCommand(0x03, 0x00, 0x08, 0x00, 0x01)
             .handleData(raw -> raw / 10)
             .build();
 
     NumericSensorType SOIL_EC = NumericSensorType.create("土壤EC值")
             .dataIndices(3, 4)
+            .unit("mS/cm")
             .requestCommand(0x03, 0x00, 0x06, 0x00, 0x01)
             .build();
 
     NumericSensorType LIQUID_LEVEL = NumericSensorType.create("液位")
             .dataIndices(3, 4)
+            .unit("cm")
             .requestCommand(0x03, 0x00, 0x00, 0x00, 0x01)
-            .handleData(raw -> raw / 100)
             .build();
 
     SensorType<?>[] VALUES = new SensorType[]{

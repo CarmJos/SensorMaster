@@ -16,6 +16,7 @@ public class NumericSensorType implements SensorType<Double> {
     }
 
     protected final @NotNull String name;
+    protected final @NotNull String unit;
 
     protected final int dataStartIndex; // 数据位开始index（含）
     protected final int dataEndIndex;// 数据位结束index（含）
@@ -23,11 +24,12 @@ public class NumericSensorType implements SensorType<Double> {
     protected final int[] requestCommand;
     protected final BiFunction<SerialData, Double, Double> dataHandler;
 
-    public NumericSensorType(@NotNull String name,
+    public NumericSensorType(@NotNull String name, @NotNull String unit,
                              int dataStartIndex, int dataEndIndex,
                              int[] requestCommand,
                              BiFunction<SerialData, Double, Double> dataHandler) {
         this.name = name;
+        this.unit = unit;
         this.dataStartIndex = dataStartIndex;
         this.dataEndIndex = dataEndIndex;
         this.requestCommand = requestCommand;
@@ -56,9 +58,15 @@ public class NumericSensorType implements SensorType<Double> {
         return dataHandler.apply(response, (double) dataRaw);
     }
 
+    @Override
+    public @NotNull String formatData(@NotNull Double data) {
+        return String.format("%.1f %s", data, unit);
+    }
+
     public static class Builder {
 
         protected final String name;
+        protected String unit = ".";
         protected int start = 2;
         protected int end = 3;
         protected int[] requestCommand = new int[0];
@@ -66,6 +74,11 @@ public class NumericSensorType implements SensorType<Double> {
 
         public Builder(String name) {
             this.name = name;
+        }
+
+        public Builder unit(@NotNull String unit) {
+            this.unit = unit;
+            return this;
         }
 
         public Builder dataIndices(int start, int end) {
@@ -84,12 +97,12 @@ public class NumericSensorType implements SensorType<Double> {
             return this;
         }
 
-        public Builder handleData(Function<Double,Double> handler){
+        public Builder handleData(Function<Double, Double> handler) {
             return handleData((data, raw) -> handler.apply(raw));
         }
 
         public NumericSensorType build() {
-            return new NumericSensorType(name, start, end, requestCommand, dataHandler);
+            return new NumericSensorType(name, unit, start, end, requestCommand, dataHandler);
         }
 
     }

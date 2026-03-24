@@ -39,6 +39,11 @@ public class Thermohygrometer implements SensorType<Thermohygrometer.Data> {
         return new Data(tempRaw / 10.0, humidityRaw / 10.0);
     }
 
+    @Override
+    public @NotNull String formatData(@NotNull Thermohygrometer.Data data) {
+        return data.temperature + " ℃ / " + data.humidity + " %RH";
+    }
+
     public record Data(double temperature, double humidity) {
     }
 

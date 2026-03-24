@@ -30,4 +30,6 @@ public interface SensorType<DATA> {
      * @return 实际数据内容
      */
     @Nullable DATA handleResponse(SerialData response);
+
+    @NotNull String formatData(@NotNull DATA data);
 }
