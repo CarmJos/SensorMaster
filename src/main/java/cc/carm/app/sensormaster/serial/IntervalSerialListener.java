@@ -83,4 +83,18 @@ public abstract class IntervalSerialListener implements SerialPortDataListener {
 
     public abstract void handle(@NotNull SerialData data);
 
+    /**
+     * 清理资源，取消任何待处理的超时任务
+     */
+    public void close() {
+        synchronized (lock) {
+            if (timeoutTask != null) {
+                timeoutTask.cancel(true);
+                timeoutTask = null;
+                Main.LOGGER.debug("Cancelled timeout task in IntervalSerialListener");
+            }
+            buffer = new byte[0]; // 清空缓冲区
+        }
+    }
+
 }

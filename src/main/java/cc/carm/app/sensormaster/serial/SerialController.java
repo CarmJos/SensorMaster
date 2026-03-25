@@ -35,6 +35,7 @@ public abstract class SerialController<DATA> {
 
     protected @Nullable Integer address;
     protected @Nullable ScheduledFuture<?> refreshTask; // 自动刷新任务
+    protected @Nullable IntervalSerialListener dataListener; // 数据监听器引用
 
     public SerialController(@NotNull SerialPort serialPort, @NotNull SensorType<DATA> sensorType) {
         this.serialPort = serialPort;
@@ -62,7 +63,7 @@ public abstract class SerialController<DATA> {
                 SerialPort.ONE_STOP_BIT, SerialPort.NO_PARITY
         );
         serialPort.flushDataListener();
-        serialPort.addDataListener(new IntervalSerialListener(100) {
+        this.dataListener = new IntervalSerialListener(100) {
             @Override
             public void handle(@NotNull SerialData response) {
                 LOGGER.info("Received raw data [{}].", response);
@@ -79,7 +80,8 @@ public abstract class SerialController<DATA> {
                     LOGGER.error("Failed to parse response [{}]: {}", response, ex.getMessage());
                 }
             }
-        });
+        };
+        serialPort.addDataListener(this.dataListener);
 
         fetchAddress();
         return true;
@@ -168,6 +170,13 @@ public abstract class SerialController<DATA> {
             LOGGER.info("Stopped refresh task.");
         }
 
+        // 关闭数据监听器
+        if (this.dataListener != null) {
+            this.dataListener.close();
+            this.dataListener = null;
+            LOGGER.info("Closed data listener.");
+        }
+
         // 关闭线程池
         if (!executor.isShutdown()) {
             executor.shutdownNow();
@@ -198,4 +207,3 @@ public abstract class SerialController<DATA> {
     }
 
 }
-
