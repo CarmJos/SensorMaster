@@ -8,7 +8,10 @@ import cc.carm.app.sensormaster.ui.ControlPanel;
 import cc.carm.app.sensormaster.ui.DisplayPanel;
 import cc.carm.app.sensormaster.ui.FooterPanel;
 import com.fazecast.jSerialComm.SerialPort;
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +33,7 @@ import java.util.stream.Collectors;
 public class Main {
 
     static {
-        FlatLightLaf.setup();
+        FlatMacLightLaf.setup();
     }
 
     public static final Logger LOGGER = LogManager.getLogger(Main.class);
