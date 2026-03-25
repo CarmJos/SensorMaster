@@ -44,3 +44,6 @@
 感谢 JetBrains 为我们提供免费的开发工具许可证，以便我致力于此项目及其他开源项目的开发工作。  
 [![](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)](https://www.jetbrains.com/?from=https://github.com/CarmJos/SensorMaster)
 
+___
+
+![Banner](.doc/icon/banner.png)
