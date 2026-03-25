@@ -60,7 +60,7 @@ public class Thermohygrometer implements SensorType<Thermohygrometer.Data> {
 
     @Override
     public @NotNull String formatData(@NotNull Thermohygrometer.Data data) {
-        return data.temperature + " ℃ / " + data.humidity + " %RH";
+        return data.temperature + "℃ / " + data.humidity + "%RH";
     }
 
     @Override

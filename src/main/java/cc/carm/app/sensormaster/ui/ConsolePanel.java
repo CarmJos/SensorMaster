@@ -39,10 +39,6 @@ public class ConsolePanel extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    public JTextArea getConsoleArea() {
-        return this.consoleArea;
-    }
-
     /**
      * 清空日志内容
      */

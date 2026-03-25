@@ -14,16 +14,17 @@ import java.util.concurrent.TimeUnit;
 
 import static com.fazecast.jSerialComm.SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
 
-public abstract class IntervalSerialListener implements SerialPortDataListener {
+public abstract class SerialBufferedListener implements SerialPortDataListener {
+
+    private static final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
     protected final long interval; // 当接受到首条消息后等待的读取时间
 
+    private final Object lock = new Object(); // 同步锁
     private volatile byte[] buffer = new byte[0]; // 数据缓冲区
     private volatile ScheduledFuture<?> timeoutTask = null; // 超时任务
-    private final Object lock = new Object(); // 同步锁
-    private static final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
-    public IntervalSerialListener(long interval) {
+    public SerialBufferedListener(long interval) {
         this.interval = interval;
     }
 

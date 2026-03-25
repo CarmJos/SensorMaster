@@ -19,11 +19,17 @@ public abstract class SerialController<DATA> {
     private static final Logger LOGGER = LogManager.getLogger(SerialController.class);
 
     public static <DATA> SerialController<DATA> create(@NotNull SerialPort serialPort, @NotNull SensorType<DATA> sensorType,
-                                                       @NotNull BiConsumer<DATA, String> dataConsumer) {
+                                                       @NotNull BiConsumer<DATA, String> dataConsumer,
+                                                       @NotNull Runnable onFetchFailed) {
         return new SerialController<DATA>(serialPort, sensorType) {
             @Override
             public void handleData(@NotNull DATA data, @NotNull String dataText) {
                 dataConsumer.accept(data, dataText);
+            }
+
+            @Override
+            public void fetchFailed() {
+                onFetchFailed.run();
             }
         };
     }
@@ -35,7 +41,7 @@ public abstract class SerialController<DATA> {
 
     protected @Nullable Integer address;
     protected @Nullable ScheduledFuture<?> refreshTask; // 自动刷新任务
-    protected @Nullable IntervalSerialListener dataListener; // 数据监听器引用
+    protected @Nullable SerialBufferedListener dataListener; // 数据监听器引用
 
     public SerialController(@NotNull SerialPort serialPort, @NotNull SensorType<DATA> sensorType) {
         this.serialPort = serialPort;
@@ -53,6 +59,8 @@ public abstract class SerialController<DATA> {
 
     public abstract void handleData(@NotNull DATA data, @NotNull String text);
 
+    public abstract void fetchFailed();
+
     public boolean connect() {
 
         LOGGER.info("Try to connect [{}] ...", serialPort.getSystemPortPath());
@@ -63,7 +71,7 @@ public abstract class SerialController<DATA> {
                 SerialPort.ONE_STOP_BIT, SerialPort.NO_PARITY
         );
         serialPort.flushDataListener();
-        this.dataListener = new IntervalSerialListener(100) {
+        this.dataListener = new SerialBufferedListener(100) {
             @Override
             public void handle(@NotNull SerialData response) {
                 LOGGER.info("Received raw data [{}].", response);
@@ -113,6 +121,7 @@ public abstract class SerialController<DATA> {
                 }
                 if (this.address != null) return; // 已找到地址，结束。
             }
+            fetchFailed();
         }, executor);
     }
 

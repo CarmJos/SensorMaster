@@ -24,27 +24,21 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Main {
 
-    static {
-        FlatMacLightLaf.setup();
-    }
-
-    public static final Logger LOGGER = LogManager.getLogger(Main.class);
-    public static @Nullable SerialController<?> CONTROLLER = null;
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-
             JFrame dashboard = new JFrame();
             dashboard.setTitle("SensorMaster 传感器调试工具");
             dashboard.setSize(900, 700);
             dashboard.setMinimumSize(new Dimension(900, 700));
             dashboard.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             dashboard.setLocationRelativeTo(null);
+            Optional.ofNullable(readIcon()).ifPresent(dashboard::setIconImage);
 
             Container contentPane = dashboard.getContentPane();
             contentPane.setLayout(new BorderLayout(15, 15));
@@ -52,20 +46,21 @@ public class Main {
 
             contentPane.add(controlPanel, BorderLayout.NORTH);
             contentPane.add(displayPanel, BorderLayout.CENTER);
-
             JPanel bottomPanel = new JPanel(new BorderLayout(0, 15));
             bottomPanel.add(consolePanel, BorderLayout.CENTER);
             bottomPanel.add(new FooterPanel(), BorderLayout.SOUTH);
             contentPane.add(bottomPanel, BorderLayout.SOUTH);
 
-            Image icon = readIcon();
-            if (icon != null) {
-                dashboard.setIconImage(icon);
-            }
-
             dashboard.setVisible(true);
         });
     }
+
+    static {
+        FlatMacLightLaf.setup();
+    }
+
+    public static final Logger LOGGER = LogManager.getLogger(Main.class);
+    public static @Nullable SerialController<?> CONTROLLER = null;
 
     protected static final ConsolePanel consolePanel = new ConsolePanel();
 
@@ -86,6 +81,11 @@ public class Main {
                     Main.CONTROLLER.autoRefresh(displayPanel.getUpdateInterval());
                     displayPanel.updateAddress(Optional.ofNullable(Main.CONTROLLER.currentAddress()).orElse(1));
                 }
+                consolePanel.appendLine("# 收到来自传感器的最新数据 [" + text + "] 。");
+            }, () -> {
+                consolePanel.appendLine("> 无法连接至 " + comPort + " ，请检查连接状态和串口权限。");
+                displayPanel.updateContent("链接异常", "无法获取目标传感器地址", Color.RED);
+                displayPanel.updateStatus(false);
             });
 
             if (!Main.CONTROLLER.connect()) {
@@ -148,6 +148,7 @@ public class Main {
         public void whenApplyAddress(int address) {
             if (Main.CONTROLLER == null) return;
             Main.CONTROLLER.updateAddress(address);
+            consolePanel.appendLine("> 更新传感器地址为 " + String.format("%02X", address) + " 。");
         }
 
         @Override
@@ -155,6 +156,7 @@ public class Main {
             if (Main.CONTROLLER == null) return 1;
             int defaults = Main.CONTROLLER.getSensorType().defaultAddress();
             Main.CONTROLLER.updateAddress(defaults);
+            consolePanel.appendLine("> 重置传感器地址为默认值 " + String.format("%02X", defaults) + " 。");
             return defaults;
         }
 
@@ -163,8 +165,8 @@ public class Main {
     private static @Nullable Image readIcon() {
         Image image = null;
         try {
-            image = ImageIO.read(Main.class.getResourceAsStream("/icon.png"));
-        } catch (Exception e) {
+            image = ImageIO.read(Objects.requireNonNull(Main.class.getResourceAsStream("/icon.png")));
+        } catch (Exception ignored) {
         }
         return image;
     }
