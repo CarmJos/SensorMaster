@@ -13,7 +13,11 @@
 
 ## 使用方法
 
-<img src=".doc/img/dashboard.png" width="600px" alt="DASHBOARD">
+
+
+| <img src=".doc/img/dashboard.png" width="500px" alt="DASHBOARD"> | <img src=".doc/img/connected.jpg" width="500px" alt="CONNECTED"> |
+|------------------------------------------------------------------|------------------------------------------------------------------|
+
 
 您可以在 [Releases](https://github.com/CarmJos/SensorMaster/releases) 页面下载最新版本的可执行文件。
 
