@@ -13,6 +13,9 @@ public interface SensorType<DATA> {
      */
     @NotNull String name();
 
+    @Range(from = 1, to = 255)
+    int defaultAddress();
+
     @NotNull
     default SerialData modifyAddress(
             @Range(from = 0, to = 255) int currentAddress,

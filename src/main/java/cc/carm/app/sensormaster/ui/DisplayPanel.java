@@ -14,6 +14,7 @@ public abstract class DisplayPanel extends JPanel {
 
     protected JSpinner addressDisplay;  // 数据地址框
     protected JButton addressApply; // 地址应用按钮
+    protected JButton addressReset; // 地址重置按钮
     protected JButton refreshButton; // 刷新按钮
     protected JComboBox<TimeInterval> intervalSelector; // 刷新频率选择框
 
@@ -53,6 +54,13 @@ public abstract class DisplayPanel extends JPanel {
         addressApply.addActionListener(e -> {
             if (!addressApply.isEnabled()) return;
             whenApplyAddress((Integer) addressDisplay.getValue());
+        });
+        addressReset = new JButton("重置默认地址");
+        addrGroup.add(addressReset);
+        addressReset.addActionListener(e -> {
+            if (!addressApply.isEnabled()) return;
+            int updated = whenResetAddress();
+            addressDisplay.setValue(updated);
         });
 
         // 右侧：刷新频率
@@ -109,6 +117,7 @@ public abstract class DisplayPanel extends JPanel {
 
     public void updateStatus(boolean status) {
         addressApply.setEnabled(status);
+        addressReset.setEnabled(status);
         addressDisplay.setEnabled(status);
         refreshButton.setEnabled(status);
     }
@@ -127,6 +136,7 @@ public abstract class DisplayPanel extends JPanel {
 
     public abstract void whenApplyAddress(int address);
 
+    public abstract int whenResetAddress();
 
     static class HexEditor extends JSpinner.DefaultEditor {
         public HexEditor(JSpinner spinner) {

@@ -1,16 +1,13 @@
 package cc.carm.app.sensormaster;
 
-import cc.carm.app.sensormaster.controller.SerialController;
 import cc.carm.app.sensormaster.data.SerialPortInfo;
+import cc.carm.app.sensormaster.serial.SerialController;
 import cc.carm.app.sensormaster.type.SensorType;
 import cc.carm.app.sensormaster.ui.ConsolePanel;
 import cc.carm.app.sensormaster.ui.ControlPanel;
 import cc.carm.app.sensormaster.ui.DisplayPanel;
 import cc.carm.app.sensormaster.ui.FooterPanel;
 import com.fazecast.jSerialComm.SerialPort;
-import com.formdev.flatlaf.FlatDarculaLaf;
-import com.formdev.flatlaf.FlatIntelliJLaf;
-import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -76,7 +73,7 @@ public class Main {
         @Override
         public void whenStart(@NotNull SerialPortInfo comPort, @NotNull SensorType<?> sensor) {
             consolePanel.appendLine("> 正在连接串口 " + comPort + " ，传感器类型 " + sensor.name());
-            displayPanel.updateContent("尝试连接中", "尝试开启串口 " + comPort.id(), Color.ORANGE);
+            displayPanel.updateContent("尝试连接", "尝试开启串口 " + comPort.id(), Color.ORANGE);
 
             if (Main.CONTROLLER != null) {
                 Main.CONTROLLER.close();
@@ -95,6 +92,8 @@ public class Main {
                 consolePanel.appendLine("> 无法连接至 " + comPort + " ，请检查连接状态和串口权限。");
                 displayPanel.updateContent("连接失败", "请确认连接状态", Color.RED);
                 displayPanel.updateStatus(false);
+            } else {
+                displayPanel.updateContent("尝试连接", "搜索传感器地址中", Color.ORANGE);
             }
 
         }
@@ -149,6 +148,14 @@ public class Main {
         public void whenApplyAddress(int address) {
             if (Main.CONTROLLER == null) return;
             Main.CONTROLLER.updateAddress(address);
+        }
+
+        @Override
+        public int whenResetAddress() {
+            if (Main.CONTROLLER == null) return 1;
+            int defaults = Main.CONTROLLER.getSensorType().defaultAddress();
+            Main.CONTROLLER.updateAddress(defaults);
+            return defaults;
         }
 
     };

@@ -1,23 +1,22 @@
-package cc.carm.app.sensormaster.controller;
+package cc.carm.app.sensormaster.serial;
 
 import cc.carm.app.sensormaster.data.SerialData;
 import cc.carm.app.sensormaster.type.SensorType;
 import com.fazecast.jSerialComm.SerialPort;
-import com.fazecast.jSerialComm.SerialPortDataListener;
-import com.fazecast.jSerialComm.SerialPortEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.concurrent.*;
 import java.util.function.BiConsumer;
 
 public abstract class SerialController<DATA> {
 
     private static final Logger LOGGER = LogManager.getLogger(SerialController.class);
-    protected static final ScheduledExecutorService SCHEDULER = Executors.newScheduledThreadPool(1);
 
     public static <DATA> SerialController<DATA> create(@NotNull SerialPort serialPort, @NotNull SensorType<DATA> sensorType,
                                                        @NotNull BiConsumer<DATA, String> dataConsumer) {
@@ -28,6 +27,8 @@ public abstract class SerialController<DATA> {
             }
         };
     }
+
+    protected final ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
 
     protected final @NotNull SerialPort serialPort;
     protected final @NotNull SensorType<DATA> sensorType;
@@ -41,33 +42,30 @@ public abstract class SerialController<DATA> {
         this.refreshTask = null;
     }
 
+    public @NotNull SerialPort getSerialPort() {
+        return this.serialPort;
+    }
+
+    public @NotNull SensorType<DATA> getSensorType() {
+        return this.sensorType;
+    }
+
     public abstract void handleData(@NotNull DATA data, @NotNull String text);
 
     public boolean connect() {
-        serialPort.setBaudRate(SerialSettings.BAUD_RATE);
-        serialPort.setNumDataBits(SerialSettings.DATA_BITS);
-        serialPort.setNumStopBits(SerialSettings.STOP_BITS);
-        serialPort.setParity(SerialSettings.PARITY);
 
         LOGGER.info("Try to connect [{}] ...", serialPort.getSystemPortPath());
         if (!serialPort.openPort()) return false;
-
         LOGGER.info("Connected to [{}]", serialPort.getSystemPortPath());
-        serialPort.addDataListener(new SerialPortDataListener() {
+        serialPort.setComPortParameters(
+                9600, 8,
+                SerialPort.ONE_STOP_BIT, SerialPort.NO_PARITY
+        );
+        serialPort.flushDataListener();
+        serialPort.addDataListener(new IntervalSerialListener(100) {
             @Override
-            public int getListeningEvents() {
-                return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
-            }
-
-            @Override
-            public void serialEvent(SerialPortEvent event) {
-                if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE) return;
-                byte[] newData = new byte[serialPort.bytesAvailable()];
-                int numRead = serialPort.readBytes(newData, newData.length);
-                if (numRead == 0) return;
-                SerialData response = SerialData.of(newData);
-                if (response == null) return;
-
+            public void handle(@NotNull SerialData response) {
+                LOGGER.info("Received raw data [{}].", response);
                 try {
                     DATA parsed = sensorType.handleResponse(response);
                     if (parsed != null) {
@@ -94,11 +92,26 @@ public abstract class SerialController<DATA> {
     public CompletableFuture<Void> fetchAddress() {
         LOGGER.info("Fetching address for sensor type [{}] ...", sensorType.name());
         return CompletableFuture.runAsync(() -> {
-            // 从 0 到 255 发送请求，并等待首次返回数据
-            for (int i = 0; i < 255; i++) {
-                send(sensorType.generateRequest(i));
+            int defaultAddress = sensorType.defaultAddress();
+            // 先尝试默认地址
+            send(sensorType.generateRequest(defaultAddress));
+            try {
+                Thread.sleep(250);
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-        });
+            if (this.address != null) return; // 已找到地址，结束。
+            for (int i = 1; i < 256; i++) {
+                if (i == defaultAddress) continue;
+                send(sensorType.generateRequest(i));
+                try {
+                    Thread.sleep(250);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                if (this.address != null) return; // 已找到地址，结束。
+            }
+        }, executor);
     }
 
     public CompletableFuture<Void> refresh() {
@@ -119,8 +132,13 @@ public abstract class SerialController<DATA> {
             return CompletableFuture.completedFuture(null);
         }
         return CompletableFuture.runAsync(() -> {
-            LOGGER.info("Updating address from [{}] to [{}] ...", address, newAddress);
+            LOGGER.info(
+                    "Updating address from [{}] to [{}] ...",
+                    String.format("%02X", currentAddress()),
+                    String.format("%02X", newAddress)
+            );
             send(sensorType.modifyAddress(address, newAddress));
+            this.address = newAddress;
         });
     }
 
@@ -134,7 +152,7 @@ public abstract class SerialController<DATA> {
 
         // 如果 interval > 0，创建新的定时任务
         if (interval > 0) {
-            refreshTask = SCHEDULER.scheduleAtFixedRate(() -> {
+            refreshTask = executor.scheduleAtFixedRate(() -> {
                 if (address == null) return;
                 send(sensorType.generateRequest(address));
             }, interval, interval, TimeUnit.MILLISECONDS);
@@ -150,22 +168,31 @@ public abstract class SerialController<DATA> {
             LOGGER.info("Stopped refresh task.");
         }
 
+        // 关闭线程池
+        if (!executor.isShutdown()) {
+            executor.shutdownNow();
+            LOGGER.info("Shutdown executor service.");
+        }
+
         // 关闭串口
         if (serialPort.isOpen()) {
+            serialPort.removeDataListener();
             serialPort.closePort();
             LOGGER.info("Closed serial port [{}]", serialPort.getSystemPortPath());
         }
+
+        this.address = null;
     }
 
-    protected boolean send(SerialData data) {
+    protected boolean send(@NotNull SerialData data) {
         if (!serialPort.isOpen()) return false;
-        byte[] raw = data.raw();
-        int bytesWritten = serialPort.writeBytes(raw, raw.length);
-        if (bytesWritten == raw.length) {
+        try (OutputStream out = serialPort.getOutputStream()) {
+            out.write(data.raw());
+            out.flush();
             LOGGER.info("Sent data {{}}", data);
             return true;
-        } else {
-            LOGGER.error("Failed to send all data.");
+        } catch (IOException e) {
+            LOGGER.error("Failed to send data [{}]: {}", data, e.getMessage());
             return false;
         }
     }

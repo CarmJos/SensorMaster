@@ -10,21 +10,38 @@ import java.util.Objects;
 
 public class Thermohygrometer implements SensorType<Thermohygrometer.Data> {
 
-    public static Thermohygrometer create(@NotNull String name, int... requestCommand) {
-        return new Thermohygrometer(name, requestCommand);
+    public static Thermohygrometer create(@NotNull String name,
+                                          int... requestCommand) {
+        return new Thermohygrometer(0x01, name, requestCommand);
+    }
+
+    public static Thermohygrometer create(@Range(from = 1, to = 255) int defaultAddr,
+                                          @NotNull String name,
+                                          int... requestCommand) {
+        return new Thermohygrometer(defaultAddr, name, requestCommand);
     }
 
     protected final @NotNull String name;
+    protected final @Range(from = 1, to = 255) int defaultAddr;
+
     protected final int[] requestCommand;
 
-    public Thermohygrometer(@NotNull String name, int[] requestCommand) {
+    public Thermohygrometer(@Range(from = 1, to = 255) int defaultAddr,
+                            @NotNull String name,
+                            int[] requestCommand) {
         this.name = name;
+        this.defaultAddr = defaultAddr;
         this.requestCommand = requestCommand;
     }
 
     @Override
     public @NotNull String name() {
         return name;
+    }
+
+    @Override
+    public @Range(from = 1, to = 255) int defaultAddress() {
+        return this.defaultAddr;
     }
 
     @Override

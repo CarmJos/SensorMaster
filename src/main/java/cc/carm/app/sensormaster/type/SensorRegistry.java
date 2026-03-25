@@ -6,64 +6,64 @@ import cc.carm.app.sensormaster.type.impl.Thermohygrometer;
 public interface SensorRegistry {
 
     NumericSensorType WIND_SPEED = NumericSensorType.create("风速")
-            .dataIndices(2, 3)
-            .unit("m/s")
+            .defaultAddress(0x54)
+            .dataIndices(2, 3).unit("m/s")
             .requestCommand(0x03, 0x00, 0x09, 0x00, 0x01)
             .handleData(raw -> raw / 10)
             .build();
 
     NumericSensorType WIND_DIRECTION = NumericSensorType.create("风向")
-            .dataIndices(3, 4)
-            .unit("°")
+            .defaultAddress(0x57)
+            .dataIndices(2, 3).unit("°")
             .requestCommand(0x03, 0x00, 0x0A, 0x00, 0x01)
             .handleData(raw -> raw / 10)
             .build();
 
     Thermohygrometer SOIL_MOISTURE = Thermohygrometer.create(
-            "土壤墒情",
+            0x15, "土壤墒情",
             0x03, 0x00, 0x04, 0x00, 0x02
     );
 
     Thermohygrometer AIR_TEMPERATURE_HUMIDITY = Thermohygrometer.create(
-            "空气温湿度",
+            0x5A, "空气温湿度",
             0x03, 0x00, 0x00, 0x00, 0x02
     );
 
     NumericSensorType CO2_CONCENTRATION = NumericSensorType.create("二氧化碳浓度")
-            .dataIndices(3, 4)
-            .unit("ppm")
+            .defaultAddress(0x01)
+            .dataIndices(2, 3).unit("ppm")
             .requestCommand(0x03, 0x00, 0x07, 0x00, 0x01)
             .build();
 
     NumericSensorType ATMOSPHERIC_PRESSURE = NumericSensorType.create("大气压力")
-            .dataIndices(3, 4)
-            .unit("hPa")
+            .defaultAddress(0x06)
+            .dataIndices(2, 3).unit("hPa")
             .requestCommand(0x03, 0x00, 0x0B, 0x00, 0x01)
             .handleData(raw -> raw / 10)
             .build();
 
     NumericSensorType LIGHT_INTENSITY = NumericSensorType.create("光照度")
-            .dataIndices(3, 6)
-            .unit("Lux")
+            .defaultAddress(0x10)
+            .dataIndices(2, 5).unit("Lux")
             .requestCommand(0x03, 0x00, 0x02, 0x00, 0x02)
             .build();
 
-    NumericSensorType SOIL_PH = NumericSensorType.create("土壤pH值")
-            .dataIndices(3, 4)
-            .unit("")
+    NumericSensorType SOIL_PH = NumericSensorType.create("土壤酸碱度")
+            .defaultAddress(0x1F)
+            .dataIndices(2, 3).unit("")
             .requestCommand(0x03, 0x00, 0x08, 0x00, 0x01)
             .handleData(raw -> raw / 10)
             .build();
 
-    NumericSensorType SOIL_EC = NumericSensorType.create("土壤EC值")
-            .dataIndices(3, 4)
-            .unit("mS/cm")
+    NumericSensorType SOIL_EC = NumericSensorType.create("土壤电导率")
+            .defaultAddress(0x18)
+            .dataIndices(2, 3).unit("uS/cm")
             .requestCommand(0x03, 0x00, 0x06, 0x00, 0x01)
             .build();
 
     NumericSensorType LIQUID_LEVEL = NumericSensorType.create("液位")
-            .dataIndices(3, 4)
-            .unit("cm")
+            .defaultAddress(0x75)
+            .dataIndices(2, 3).unit("cm")
             .requestCommand(0x03, 0x00, 0x00, 0x00, 0x01)
             .build();
 

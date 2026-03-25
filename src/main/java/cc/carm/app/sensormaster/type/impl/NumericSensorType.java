@@ -15,6 +15,7 @@ public class NumericSensorType implements SensorType<Double> {
         return new Builder(name);
     }
 
+    protected final @Range(from = 1, to = 255) int defaultAddr;
     protected final @NotNull String name;
     protected final @NotNull String unit;
 
@@ -24,12 +25,14 @@ public class NumericSensorType implements SensorType<Double> {
     protected final int[] requestCommand;
     protected final BiFunction<SerialData, Double, Double> dataHandler;
 
-    public NumericSensorType(@NotNull String name, @NotNull String unit,
+    public NumericSensorType(@Range(from = 1, to = 255) int defaultAddress,
+                             @NotNull String name, @NotNull String unit,
                              int dataStartIndex, int dataEndIndex,
                              int[] requestCommand,
                              BiFunction<SerialData, Double, Double> dataHandler) {
         this.name = name;
         this.unit = unit;
+        this.defaultAddr = defaultAddress;
         this.dataStartIndex = dataStartIndex;
         this.dataEndIndex = dataEndIndex;
         this.requestCommand = requestCommand;
@@ -42,6 +45,11 @@ public class NumericSensorType implements SensorType<Double> {
     }
 
     @Override
+    public @Range(from = 1, to = 255) int defaultAddress() {
+        return this.defaultAddr;
+    }
+
+    @Override
     public @NotNull SerialData generateRequest(@Range(from = 0, to = 255) int address) {
         return SerialData.of(address, requestCommand);
     }
@@ -49,6 +57,7 @@ public class NumericSensorType implements SensorType<Double> {
     @Override
     public @Nullable Double handleResponse(SerialData response) {
         if (response == null || response.length() < dataEndIndex) return null;
+        if (response.validate(0, 6)) return null;
         int dataRaw = 0;
         // 从 dataStartIndex 到 dataEndIndex（含）依次读取字节，组合成整数
         for (int i = dataStartIndex; i <= dataEndIndex; i++) {
@@ -73,6 +82,7 @@ public class NumericSensorType implements SensorType<Double> {
 
         protected final String name;
         protected String unit = ".";
+        protected int defaultAddr = 0x01;
         protected int start = 2;
         protected int end = 3;
         protected int[] requestCommand = new int[0];
@@ -84,6 +94,11 @@ public class NumericSensorType implements SensorType<Double> {
 
         public Builder unit(@NotNull String unit) {
             this.unit = unit;
+            return this;
+        }
+
+        public Builder defaultAddress(@Range(from = 1, to = 255) int defaultAddr) {
+            this.defaultAddr = defaultAddr;
             return this;
         }
 
@@ -108,7 +123,7 @@ public class NumericSensorType implements SensorType<Double> {
         }
 
         public NumericSensorType build() {
-            return new NumericSensorType(name, unit, start, end, requestCommand, dataHandler);
+            return new NumericSensorType(defaultAddr, name, unit, start, end, requestCommand, dataHandler);
         }
 
     }
