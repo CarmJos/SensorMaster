@@ -1,4 +1,4 @@
-package cc.carm.app.sensormaster.data;
+package cc.carm.app.sensormaster.serial;
 
 import com.fazecast.jSerialComm.SerialPort;
 import org.jetbrains.annotations.NotNull;

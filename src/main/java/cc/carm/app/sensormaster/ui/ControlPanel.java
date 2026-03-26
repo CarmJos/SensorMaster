@@ -1,8 +1,8 @@
 package cc.carm.app.sensormaster.ui;
 
-import cc.carm.app.sensormaster.data.SerialPortInfo;
-import cc.carm.app.sensormaster.type.SensorRegistry;
-import cc.carm.app.sensormaster.type.SensorType;
+import cc.carm.app.sensormaster.serial.SerialPortInfo;
+import cc.carm.app.sensormaster.sensor.SensorRegistry;
+import cc.carm.app.sensormaster.sensor.SensorType;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

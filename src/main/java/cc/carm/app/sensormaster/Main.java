@@ -1,8 +1,8 @@
 package cc.carm.app.sensormaster;
 
-import cc.carm.app.sensormaster.data.SerialPortInfo;
+import cc.carm.app.sensormaster.serial.SerialPortInfo;
 import cc.carm.app.sensormaster.serial.SerialController;
-import cc.carm.app.sensormaster.type.SensorType;
+import cc.carm.app.sensormaster.sensor.SensorType;
 import cc.carm.app.sensormaster.ui.ConsolePanel;
 import cc.carm.app.sensormaster.ui.ControlPanel;
 import cc.carm.app.sensormaster.ui.DisplayPanel;

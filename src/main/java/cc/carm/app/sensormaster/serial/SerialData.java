@@ -1,4 +1,4 @@
-package cc.carm.app.sensormaster.data;
+package cc.carm.app.sensormaster.serial;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

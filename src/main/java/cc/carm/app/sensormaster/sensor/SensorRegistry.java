@@ -1,7 +1,7 @@
-package cc.carm.app.sensormaster.type;
+package cc.carm.app.sensormaster.sensor;
 
-import cc.carm.app.sensormaster.type.impl.NumericSensorType;
-import cc.carm.app.sensormaster.type.impl.Thermohygrometer;
+import cc.carm.app.sensormaster.sensor.impl.NumericSensorType;
+import cc.carm.app.sensormaster.sensor.impl.Thermohygrometer;
 
 public interface SensorRegistry {
 

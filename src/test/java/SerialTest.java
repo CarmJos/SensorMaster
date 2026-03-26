@@ -1,6 +1,5 @@
-import cc.carm.app.sensormaster.data.SerialData;
+import cc.carm.app.sensormaster.serial.SerialData;
 import com.fazecast.jSerialComm.SerialPort;
-import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;

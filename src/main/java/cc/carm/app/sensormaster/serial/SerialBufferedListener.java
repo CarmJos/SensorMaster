@@ -1,7 +1,6 @@
 package cc.carm.app.sensormaster.serial;
 
 import cc.carm.app.sensormaster.Main;
-import cc.carm.app.sensormaster.data.SerialData;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;

@@ -1,7 +1,6 @@
 package cc.carm.app.sensormaster.serial;
 
-import cc.carm.app.sensormaster.data.SerialData;
-import cc.carm.app.sensormaster.type.SensorType;
+import cc.carm.app.sensormaster.sensor.SensorType;
 import com.fazecast.jSerialComm.SerialPort;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

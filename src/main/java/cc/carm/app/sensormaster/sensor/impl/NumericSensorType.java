@@ -1,7 +1,7 @@
-package cc.carm.app.sensormaster.type.impl;
+package cc.carm.app.sensormaster.sensor.impl;
 
-import cc.carm.app.sensormaster.data.SerialData;
-import cc.carm.app.sensormaster.type.SensorType;
+import cc.carm.app.sensormaster.serial.SerialData;
+import cc.carm.app.sensormaster.sensor.SensorType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
