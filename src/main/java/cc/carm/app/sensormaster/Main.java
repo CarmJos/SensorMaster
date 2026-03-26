@@ -115,10 +115,11 @@ public class Main {
             LOGGER.info("Refreshing COM ports...");
             return Arrays.stream(SerialPort.getCommPorts())
                     .peek(port -> LOGGER.info(
-                            "Found serial port ({}) {} @[{}] - {}",
+                            "Found serial port ({}) {} @[{}] - {} - {}",
                             port.getPortLocation(),
                             port.getSystemPortName(),
-                            port.getSystemPortPath(),
+                            port.getSystemPortPath().replace("\\\\","\\").replace("\\.",""),
+                            port.getDescriptivePortName(),
                             port.getPortDescription()
                     )).map(SerialPortInfo::of).collect(Collectors.toList());
         }
