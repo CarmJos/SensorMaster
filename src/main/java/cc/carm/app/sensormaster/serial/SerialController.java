@@ -114,7 +114,7 @@ public abstract class SerialController<DATA> {
                 if (i == defaultAddress) continue;
                 send(sensorType.generateRequest(i));
                 try {
-                    Thread.sleep(250);
+                    Thread.sleep(120);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
