@@ -78,7 +78,6 @@ public class Main {
                 displayPanel.updateContent(text);
                 displayPanel.updateStatus(true);
                 if (Main.CONTROLLER != null) {
-                    Main.CONTROLLER.autoRefresh(displayPanel.getUpdateInterval());
                     displayPanel.updateAddress(Optional.ofNullable(Main.CONTROLLER.currentAddress()).orElse(1));
                 }
                 consolePanel.appendLine("# 收到来自传感器的最新数据 [" + text + "] 。");
@@ -92,6 +91,7 @@ public class Main {
                 consolePanel.appendLine("> 无法连接至 " + comPort + " ，请检查连接状态和串口权限。");
                 displayPanel.updateContent("连接失败", "请确认连接状态", Color.RED);
                 displayPanel.updateStatus(false);
+                Main.CONTROLLER.autoRefresh(displayPanel.getUpdateInterval());
             } else {
                 displayPanel.updateContent("尝试连接", "搜索传感器地址中", Color.ORANGE);
             }
@@ -118,7 +118,7 @@ public class Main {
                             "Found serial port ({}) {} @[{}] - {} - {}",
                             port.getPortLocation(),
                             port.getSystemPortName(),
-                            port.getSystemPortPath().replace("\\\\","\\").replace("\\.",""),
+                            port.getSystemPortPath().replace("\\\\", "\\").replace("\\.", ""),
                             port.getDescriptivePortName(),
                             port.getPortDescription()
                     )).map(SerialPortInfo::of).collect(Collectors.toList());

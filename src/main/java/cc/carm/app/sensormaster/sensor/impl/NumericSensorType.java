@@ -1,5 +1,6 @@
 package cc.carm.app.sensormaster.sensor.impl;
 
+import cc.carm.app.sensormaster.Main;
 import cc.carm.app.sensormaster.serial.SerialData;
 import cc.carm.app.sensormaster.sensor.SensorType;
 import org.jetbrains.annotations.NotNull;
@@ -59,11 +60,14 @@ public class NumericSensorType implements SensorType<Double> {
         if (response == null || response.length() < dataEndIndex) return null;
         if (response.validate(0, 6)) return null;
         int dataRaw = 0;
+        StringBuilder dataInfo = new StringBuilder();
         // 从 dataStartIndex 到 dataEndIndex（含）依次读取字节，组合成整数
         for (int i = dataStartIndex; i <= dataEndIndex; i++) {
             int byteValue = response.read(i);
+            dataInfo.append(String.format("%02X ", byteValue));
             dataRaw = (dataRaw << 8) | byteValue;
         }
+        Main.LOGGER.info("Handling data for sensor [{}]: {} ({} bytes)", name, dataInfo.toString().trim(), dataEndIndex - dataStartIndex + 1);
         return dataHandler.apply(response, (double) dataRaw);
     }
 
